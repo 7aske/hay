@@ -1,0 +1,13 @@
+# build files
+build
+
+# IDE/Editor specific configuration
+.vscode
+.idea
+
+# dotenv configuration for production
+.env.production
+
+# libs
+node_modules
+
