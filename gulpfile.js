@@ -50,6 +50,7 @@ function styles() {
 		.pipe(plumber())
 		.pipe(sass({outputStyle: "compressed"}))
 		.pipe(postcss([cssnano()]))
+		.pipe()
 		.pipe(gulp.dest("build/static/styles"));
 }
 
