@@ -18,6 +18,7 @@ const serverFolder = "src/server/**/*.ts";
 // UTIL
 function compileForBackEnd(folder, dest) {
 	return gulp.src([folder])
+		.pipe(plumber())
 		.pipe(sourcemaps.init())
 		.pipe(pjson)
 		.js
@@ -35,6 +36,7 @@ function assets() {
 
 function scripts() {
 	return gulp.src([scriptsFolder])
+		.pipe(plumber())
 		.pipe(ts({
 			target: "es5",
 			module: "commonjs",
@@ -50,7 +52,6 @@ function styles() {
 		.pipe(plumber())
 		.pipe(sass({outputStyle: "compressed"}))
 		.pipe(postcss([cssnano()]))
-		.pipe()
 		.pipe(gulp.dest("build/static/styles"));
 }
 
