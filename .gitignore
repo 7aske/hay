@@ -11,3 +11,10 @@ build
 # libs
 node_modules
 
+# powerdesigner
+*.cdb
+*.pdb
+*.pjb
+
+# logs
+*.log
