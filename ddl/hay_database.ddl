@@ -92,7 +92,7 @@ create table contact_type
 create table media
 (
    id_media             int not null auto_increment,
-   media_data           vbin not null,
+   media_data           blob not null,
    media_filename       varchar(1024) not null,
    primary key (id_media)
 );
@@ -213,7 +213,7 @@ alter table post_category add constraint fk_post_category2 foreign key (id_post)
       references post (id_post) on delete restrict on update restrict;
 
 alter table post_media add constraint fk_post_media foreign key (id_media)
-      references media (id_media) on delete restrict on update restrict;
+      references media (id_media) on delete cascade on update cascade;
 
 alter table post_media add constraint fk_post_media2 foreign key (id_post)
       references post (id_post) on delete restrict on update restrict;
@@ -228,7 +228,7 @@ alter table post_upvote add constraint fk_post_upvote foreign key (id_post)
       references post (id_post) on delete restrict on update restrict;
 
 alter table user add constraint fk_user_picture foreign key (id_media)
-      references media (id_media) on delete restrict on update restrict;
+      references media (id_media) on delete cascade on update cascade;
 
 alter table user_comment add constraint fk_user_comment foreign key (id_comment)
       references comment (id_comment) on delete restrict on update restrict;
