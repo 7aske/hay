@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     5/11/2020 4:08:14 AM                         */
+/* Created on:     5/11/2020 4:13:03 AM                         */
 /*==============================================================*/
 
 
@@ -32,33 +32,164 @@ drop table if exists user;
 
 drop table if exists user_comment;
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: category                                              */
+/*==============================================================*/
+create table category
+(
+   id_category          int not null auto_increment,
+   category_name        varchar(64) not null,
+   primary key (id_category)
+);
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: comment                                               */
+/*==============================================================*/
+create table comment
+(
+   id_comment           int not null auto_increment,
+   id_post              int not null,
+   comment_body         text not null,
+   comment_date_posted  timestamp,
+   primary key (id_comment)
+);
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: comment_upvote                                        */
+/*==============================================================*/
+create table comment_upvote
+(
+   comment_upvote_hash  varchar(128) not null,
+   id_comment           int not null,
+   primary key (comment_upvote_hash)
+);
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: contact                                               */
+/*==============================================================*/
+create table contact
+(
+   id_contact           int not null auto_increment,
+   id_user              int not null,
+   id_contact_type      int not null,
+   contact_value        varchar(128) not null,
+   primary key (id_contact)
+);
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: contact_type                                          */
+/*==============================================================*/
+create table contact_type
+(
+   id_contact_type      int not null auto_increment,
+   contact_type_name    varchar(128) not null,
+   primary key (id_contact_type)
+);
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: media                                                 */
+/*==============================================================*/
+create table media
+(
+   id_media             int not null auto_increment,
+   media_data           vbin not null,
+   media_filename       varchar(1024) not null,
+   primary key (id_media)
+);
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: post                                                  */
+/*==============================================================*/
+create table post
+(
+   id_post              int not null auto_increment,
+   id_user              int,
+   post_title           varchar(255) not null,
+   post_excerpt         text not null,
+   post_body            text not null,
+   post_date_posted     timestamp,
+   post_deleted         bool default 0,
+   post_published       bool default 0,
+   primary key (id_post)
+);
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: post_category                                         */
+/*==============================================================*/
+create table post_category
+(
+   id_category          int not null,
+   id_post              int not null,
+   primary key (id_category, id_post)
+);
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: post_media                                            */
+/*==============================================================*/
+create table post_media
+(
+   id_media             int not null,
+   id_post              int not null,
+   primary key (id_media, id_post)
+);
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: post_tag                                              */
+/*==============================================================*/
+create table post_tag
+(
+   id_tag               int not null,
+   id_post              int not null,
+   primary key (id_tag, id_post)
+);
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: post_upvote                                           */
+/*==============================================================*/
+create table post_upvote
+(
+   post_upvote_hash     varchar(128) not null,
+   id_post              int not null,
+   primary key (post_upvote_hash)
+);
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: tag                                                   */
+/*==============================================================*/
+create table tag
+(
+   id_tag               int not null auto_increment,
+   tag_name             varchar(64) not null,
+   primary key (id_tag)
+);
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: user                                                  */
+/*==============================================================*/
+create table user
+(
+   id_user              int not null auto_increment,
+   id_media             int,
+   user_username        varchar(128) not null,
+   user_email           varchar(128) not null,
+   user_password        varchar(512) not null,
+   user_first_name      varchar(128) not null,
+   user_last_name       varchar(128) not null,
+   user_display_name    varchar(128) not null,
+   user_description     varchar(255),
+   user_about           text,
+   primary key (id_user)
+);
 
-mysql> source <file_name>;
+/*==============================================================*/
+/* Table: user_comment                                          */
+/*==============================================================*/
+create table user_comment
+(
+   id_comment           int not null,
+   id_user              int not null,
+   primary key (id_comment, id_user)
+);
 
 alter table comment add constraint fk_post_comment foreign key (id_post)
       references post (id_post) on delete restrict on update restrict;
