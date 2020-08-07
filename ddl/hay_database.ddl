@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     8/7/2020 5:55:59 PM                          */
+/* Created on:     8/7/2020 7:43:16 PM                          */
 /*==============================================================*/
 
 
@@ -17,6 +17,8 @@ drop table if exists contact_type;
 drop table if exists media;
 
 drop table if exists post;
+
+drop table if exists post_media;
 
 drop table if exists post_tag2;
 
@@ -35,9 +37,9 @@ drop table if exists user_role;
 /*==============================================================*/
 create table category
 (
-   id_category2         int not null auto_increment,
+   id_category          int not null auto_increment,
    category_name        varchar(64) not null,
-   primary key (id_category2)
+   primary key (id_category)
 );
 
 /*==============================================================*/
@@ -58,9 +60,9 @@ create table comment
 /*==============================================================*/
 create table comment_upvote
 (
-   comment_upvote_hash2 varchar(128) not null,
+   comment_upvote_hash  varchar(128) not null,
    id_comment           int not null,
-   primary key (comment_upvote_hash2)
+   primary key (comment_upvote_hash)
 );
 
 /*==============================================================*/
@@ -71,7 +73,7 @@ create table contact
    id_contact           int not null auto_increment,
    id_contact_type      int,
    id_user              int,
-   value                varchar(256) not null,
+   contact_value        varchar(128) not null,
    primary key (id_contact)
 );
 
@@ -81,8 +83,8 @@ create table contact
 create table contact_type
 (
    id_contact_type      int not null auto_increment,
-   name                 varchar(64) not null,
-   value_type           varchar(32) not null,
+   contact_type_name    varchar(128) not null,
+   contact_type_value_type varchar(32) not null,
    primary key (id_contact_type)
 );
 
@@ -103,16 +105,25 @@ create table post
 (
    id_post              int not null auto_increment,
    id_user              int,
-   id_category2         int not null,
-   id_media             int,
+   id_category          int not null,
    post_title           varchar(255) not null,
    post_excerpt         text not null,
    post_body            text not null,
    post_date_posted     timestamp,
    post_deleted         bool default 0,
    post_published       bool default 0,
-   views                bigint,
+   post_views           bigint,
    primary key (id_post)
+);
+
+/*==============================================================*/
+/* Table: post_media                                            */
+/*==============================================================*/
+create table post_media
+(
+   id_media             int not null,
+   id_post              int not null,
+   primary key (id_media, id_post)
 );
 
 /*==============================================================*/
@@ -120,9 +131,9 @@ create table post
 /*==============================================================*/
 create table post_tag2
 (
-   id_tag2              int not null,
+   id_tag               int not null,
    id_post              int not null,
-   primary key (id_tag2, id_post)
+   primary key (id_tag, id_post)
 );
 
 /*==============================================================*/
@@ -130,9 +141,9 @@ create table post_tag2
 /*==============================================================*/
 create table post_upvote
 (
-   post_upvote_hash2    varchar(128) not null,
+   post_upvote_hash     varchar(128) not null,
    id_post              int not null,
-   primary key (post_upvote_hash2)
+   primary key (post_upvote_hash)
 );
 
 /*==============================================================*/
@@ -150,9 +161,9 @@ create table role
 /*==============================================================*/
 create table tag
 (
-   id_tag2              int not null auto_increment,
+   id_tag               int not null auto_increment,
    tag_name             varchar(64) not null,
-   primary key (id_tag2)
+   primary key (id_tag)
 );
 
 /*==============================================================*/
@@ -168,8 +179,8 @@ create table user
    user_last_name       varchar(128) not null,
    user_address         varchar(128),
    user_about           text,
-   display_name         varchar(64) not null,
-   date_created         datetime,
+   user_display_name    varchar(128) not null,
+   user_date_created    datetime,
    primary key (id_user)
 );
 
@@ -201,14 +212,17 @@ alter table contact add constraint fk_user_contact foreign key (id_user)
 alter table post add constraint fk_post_author2 foreign key (id_user)
       references user (id_user) on delete restrict on update restrict;
 
-alter table post add constraint fk_post_category2 foreign key (id_category2)
-      references category (id_category2) on delete restrict on update restrict;
+alter table post add constraint fk_post_category2 foreign key (id_category)
+      references category (id_category) on delete restrict on update restrict;
 
-alter table post add constraint fk_post_media foreign key (id_media)
+alter table post_media add constraint fk_post_media foreign key (id_media)
       references media (id_media) on delete restrict on update restrict;
 
-alter table post_tag2 add constraint fk_post_tag2 foreign key (id_tag2)
-      references tag (id_tag2) on delete restrict on update restrict;
+alter table post_media add constraint fk_post_media2 foreign key (id_post)
+      references post (id_post) on delete restrict on update restrict;
+
+alter table post_tag2 add constraint fk_post_tag2 foreign key (id_tag)
+      references tag (id_tag) on delete restrict on update restrict;
 
 alter table post_tag2 add constraint fk_post_tag3 foreign key (id_post)
       references post (id_post) on delete restrict on update restrict;
